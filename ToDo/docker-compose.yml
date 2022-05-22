@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  db:
+    container_name: postgres
+    image: postgres:latest
+    restart: unless-stopped
+    networks:
+      - todo
+    environment:
+      - POSTGRES_PASSWORD=Your_password123
+      - POSTGRES_USER=todoadmin
+      - POSTGRES_DB=todoDb
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 2000m
+        reservations:
+          memory: 500m
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    networks:
+      - todo
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - 5050:80
+
+volumes:
+  db-data:
+    external: false
+networks:
+  todo:
+    name: todo-network
